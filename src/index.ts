@@ -11,7 +11,7 @@ import {v4 as uuidv4} from 'uuid';
 const program = new Command();
 program.option('-p, --path <path>', 'path to file to be uploaded')
     .parse();
-const basepath = `HomeworkCLI/upload/`;
+const basepath = `HomeworkCLI/upload`;
 axios.defaults.maxBodyLength = Infinity;
 if (!program.getOptionValue('path')) {
   console.log('Please specify file.');
@@ -73,6 +73,6 @@ async function upload(sts: any, file: string, base: string, basepath: string) {
       'Content-Type': `multipart/form-data; boundary=${data.getBoundary()}`,
     },
   }).then((value) => {
-    console.log(`http://fei.oss-cn-hangzhou.aliyuncs.com/${sts.dir}${basepath}${path.relative(base, file).split(path.sep).join('/')}`);
+    console.log(`http://fei.oss-cn-hangzhou.aliyuncs.com/${sts.dir}${basepath}/${path.relative(base, file).split(path.sep).join('/')}`);
   });
 }
