@@ -65,7 +65,7 @@ async function upload(sts: any, file: string, base: string, basepath: string) {
   data.append('policy', sts.policy);
   data.append('signature', sts.signature);
   data.append('success_action_status', '200');
-  data.append('file', fs.readFileSync(file), {
+  data.append('file', fs.createReadStream(file), {
     contentType: mimeType.lookup(path.parse(file).base) || 'application/octet-stream',
   });
   await axios.post(sts.host, data, {
