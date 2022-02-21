@@ -14,7 +14,7 @@ const program = new Command();
 program.option('-p, --path <path>', 'path to file to be uploaded')
     .option('-t, --thread <number>', 'number of threads to use')
     .parse();
-const basepath = `HomeworkCLI/upload/`;
+const basepath = `HomeworkCLI/upload`;
 axios.defaults.maxBodyLength = Infinity;
 if (!program.getOptionValue('path')) {
   console.log('Please specify file.');
@@ -59,6 +59,7 @@ const body = [{
 })();
 
 // eslint-disable-next-line require-jsdoc
+<<<<<<< HEAD
 async function upload(sts: any, files: string[], base: string, basepath: string) {
   const downloadworker = new DownloadWorker();
   downloadworker.setThread(parseInt(program.getOptionValue('thread')) || downloadworker.getThread());
@@ -89,4 +90,24 @@ async function upload(sts: any, files: string[], base: string, basepath: string)
   }
   downloadworker.start();
   await downloadworker.wait();
+=======
+async function upload(sts: any, file: string, base: string, basepath: string) {
+  const data = new FormData();
+  data.append('name', path.parse(file).base);
+  data.append('key', `${sts.dir}${basepath}${path.relative(base, file).split(path.sep).join('/')}`);
+  data.append('OSSAccessKeyId', sts.accessid);
+  data.append('policy', sts.policy);
+  data.append('signature', sts.signature);
+  data.append('success_action_status', '200');
+  data.append('file', fs.createReadStream(file), {
+    contentType: mimeType.lookup(path.parse(file).base) || 'application/octet-stream',
+  });
+  await axios.post(sts.host, data, {
+    headers: {
+      'Content-Type': `multipart/form-data; boundary=${data.getBoundary()}`,
+    },
+  }).then((value) => {
+    console.log(`http://fei.oss-cn-hangzhou.aliyuncs.com/${sts.dir}${basepath}/${path.relative(base, file).split(path.sep).join('/')}`);
+  });
+>>>>>>> 663498673f17cb3a4f8690c886d7a6b740cffcf6
 }
